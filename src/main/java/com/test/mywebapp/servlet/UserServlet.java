@@ -33,6 +33,6 @@ public class UserServlet extends HttpServlet {
         List<User> users = userDAO.getAllUsers();
         System.out.println("\nUser size: " + users.size() + "\n");
         req.setAttribute("users", users);
-        req.getRequestDispatcher("mwa.jsp").forward(req, resp);
+        req.getRequestDispatcher("all-users.jsp").forward(req, resp);
     }
 }
