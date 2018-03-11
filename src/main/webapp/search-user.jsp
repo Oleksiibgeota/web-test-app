@@ -21,6 +21,28 @@
 </head>
 <body>
     <div id="left">
+    <c:if test=${not empty user}>
+        <table border="0" cellpadding="10">
+            <thead>
+                <tr align="left">
+                    <th>Id</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Salary</th>
+                </tr>
+            </thead>
+            <tbody >
+                <tr></tr><tr></tr>
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.nameFirst}</td>
+                    <td>${user.nameLast}</td>
+                    <td>${user.salary}</td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+    </c:if>
         <form action="" method="GET">
             <p>Input user name : <input type="text" name="firstName"></p>
             <input type="submit" value="pass" />
