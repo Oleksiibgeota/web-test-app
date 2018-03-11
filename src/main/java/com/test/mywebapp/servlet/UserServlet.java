@@ -15,14 +15,14 @@ public class UserServlet extends HttpServlet {
     private MySqlUserDAO userDAO = new MySqlUserDAO();
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         String firstName = req.getParameter("firstname");
         String lastName = req.getParameter("lastname");
         userDAO.createUser(firstName, lastName);
     }
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         String firstName = req.getParameter("firstname");
         String lastName = req.getParameter("lastname");
         userDAO.deleteUserByFirstNameAndLastName(firstName, lastName);
