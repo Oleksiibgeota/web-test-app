@@ -18,4 +18,11 @@ public class UserServlet extends HttpServlet {
         String lastName = req.getParameter("lastname");
         userDAO.createUser(firstName, lastName);
     }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String firstName = req.getParameter("firstname");
+        String lastName = req.getParameter("lastname");
+        userDAO.deleteUserByFirstNameAndLastName(firstName, lastName);
+    }
 }
