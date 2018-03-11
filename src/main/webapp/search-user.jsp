@@ -21,7 +21,7 @@
 </head>
 <body>
     <div id="left">
-    <c:if test=${not empty user}>
+    <c:if test="${not empty user}">
         <table border="0" cellpadding="10">
             <thead>
                 <tr align="left">
