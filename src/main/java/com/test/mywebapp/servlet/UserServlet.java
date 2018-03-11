@@ -1,0 +1,6 @@
+package com.test.mywebapp.servlet;
+
+import javax.servlet.http.HttpServlet;
+
+public class UserServlet extends HttpServlet {
+}
