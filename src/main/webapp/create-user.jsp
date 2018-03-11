@@ -17,15 +17,8 @@
             <input type="text" name="firstname"><br>
             Last name:<br>
             <input type="text" name="lastname"><br>
-            <input type="submit" value="Create">
-        </form>
-        <h2>Delete user form</h2>
-        <form action="/mywebapp/create" method="DELETE">
-            name<br>
-            <input type="text" name="firstname"><br>
-            Last name:<br>
-            <input type="text" name="lastname"><br>
-            <input type="submit" value="Delete">
+            <input type="submit" name = "action" value="Create">
+            <input type="submit" name = "action" value="Delete">
         </form>
     </div>
     <div id = "right">

@@ -18,18 +18,15 @@ public class CreateUserServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String firstName = req.getParameter("firstname");
         String lastName = req.getParameter("lastname");
-        userDAO.createUser(firstName, lastName);
-        resp.sendRedirect("/mywebapp/create");
-    }
 
-    @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String firstName = req.getParameter("firstname");
-        String lastName = req.getParameter("lastname");
-        userDAO.deleteUserByFirstNameAndLastName(firstName, lastName);
+        if (req.getParameter("action").equals("Delete")) {
+            userDAO.deleteUserByFirstNameAndLastName(firstName, lastName);
+        } else if (req.getParameter("action").equals("Create")) {
+            userDAO.createUser(firstName, lastName);
+        }
         resp.sendRedirect("/mywebapp/create");
     }
 }
