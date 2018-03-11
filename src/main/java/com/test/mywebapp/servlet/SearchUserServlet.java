@@ -17,7 +17,10 @@ public class SearchUserServlet extends HttpServlet {
         String firstName = req.getParameter("firstName");
         if (firstName != null) {
             User user = userDAO.getUserByName(firstName);
-            req.setAttribute("user", user);
+            System.out.println("search user: " + user);
+            if (user != null) {
+                req.setAttribute("user", user);
+            }
         }
         req.getRequestDispatcher("search-user.jsp").forward(req, resp);
     }

@@ -34,22 +34,23 @@ public class MySqlUserDAO implements UserDao {
     }
 
     public User getUserByName(String name) {
-        User user = new User();
         String query = "SELECT * FROM user WHERE name = ?;";
         try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(query)) {
             stmt.setString(1, name);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
+                User user = new User();
                 user.setId(rs.getLong("id"));
                 user.setNameFirst(rs.getString("name"));
                 user.setNameLast(rs.getString("family"));
                 user.setSalary(rs.getInt("salary"));
+                System.out.println("DB users size: " + user);
+                return user;
             }
-            System.out.println("DB users size: " + user);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return user;
+        return null;
     }
 
     @Override
