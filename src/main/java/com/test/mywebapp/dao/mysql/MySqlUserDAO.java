@@ -1,7 +1,7 @@
 package com.test.mywebapp.dao.mysql;
 
 import com.test.mywebapp.dao.UserDao;
-import com.test.mywebapp.dto.User;
+import com.test.mywebapp.domain.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

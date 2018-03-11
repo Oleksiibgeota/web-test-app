@@ -1,6 +1,6 @@
 package com.test.mywebapp.dao;
 
-import com.test.mywebapp.dto.User;
+import com.test.mywebapp.domain.User;
 
 import java.util.List;
 

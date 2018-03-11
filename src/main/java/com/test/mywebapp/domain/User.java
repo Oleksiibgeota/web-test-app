@@ -1,4 +1,4 @@
-package com.test.mywebapp.dto;
+package com.test.mywebapp.domain;
 
 public class User {
     private Long id;
