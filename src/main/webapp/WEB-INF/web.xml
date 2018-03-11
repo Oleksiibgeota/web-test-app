@@ -17,19 +17,29 @@
     </resource-ref>
 
     <servlet>
-        <servlet-name>UserServlet</servlet-name>
-        <servlet-class>com.test.mywebapp.servlet.UserServlet</servlet-class>
+        <servlet-name>ListAllUserServlet</servlet-name>
+        <servlet-class>com.test.mywebapp.servlet.ListAllUserServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>UserServlet</servlet-name>
+        <servlet-name>ListAllUserServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CreateUserServlet</servlet-name>
+        <servlet-class>com.test.mywebapp.servlet.CreateUserServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
-        <servlet-name>UserServlet</servlet-name>
+        <servlet-name>CreateUserServlet</servlet-name>
         <url-pattern>/create</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SearchUserServlet</servlet-name>
+        <servlet-class>com.test.mywebapp.servlet.SearchUserServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
-        <servlet-name>UserServlet</servlet-name>
+        <servlet-name>SearchUserServlet</servlet-name>
         <url-pattern>/get</url-pattern>
     </servlet-mapping>
 </web-app>
