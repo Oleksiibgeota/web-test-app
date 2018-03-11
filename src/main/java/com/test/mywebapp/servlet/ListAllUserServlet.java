@@ -10,23 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-public class UserServlet extends HttpServlet {
+public class ListAllUserServlet extends HttpServlet {
 
     private MySqlUserDAO userDAO = new MySqlUserDAO();
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        String firstName = req.getParameter("firstname");
-        String lastName = req.getParameter("lastname");
-        userDAO.createUser(firstName, lastName);
-    }
-
-    @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
-        String firstName = req.getParameter("firstname");
-        String lastName = req.getParameter("lastname");
-        userDAO.deleteUserByFirstNameAndLastName(firstName, lastName);
-    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
