@@ -28,18 +28,12 @@ public class MySqlUserDAO implements UserDao {
                 if (usersMap.containsKey(userId)) {
                     User user = usersMap.get(userId);
                     Car car = new Car();
-                    List<Car> cars = new ArrayList<>();
                     rs.getInt("car_id");
                     car.setId(rs.getInt("car_id"));
                     car.setName(rs.getString(10));
                     user.getCars().add(car);
-
-//                    user.setCars(cars);
                     usersMap.put(userId, user);
-
-
                 } else {
-
                     User user = new User();
                     user.setId(userId);
                     user.setNameFirst(rs.getString(2));
@@ -52,7 +46,6 @@ public class MySqlUserDAO implements UserDao {
                     cars.add(car);
                     user.setCars(cars);
                     usersMap.put(userId, user);
-
                 }
             }
         } catch (SQLException e) {
@@ -99,8 +92,7 @@ public class MySqlUserDAO implements UserDao {
                 user.setCars(cars);
                 count++;
                 return user;
-            }
-            else{
+            } else {
                 User user = new User();
                 Car car = new Car();
                 car.setId(rs.getInt("car_id"));
