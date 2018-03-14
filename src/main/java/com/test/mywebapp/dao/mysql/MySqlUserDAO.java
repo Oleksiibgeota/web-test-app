@@ -42,7 +42,7 @@ public class MySqlUserDAO implements UserDao {
 
                     User user = new User();
                     user.setId(userId);
-                    user.setNameFirst(rs.getString("name"));
+                    user.setNameFirst(rs.getString(2));
                     user.setNameLast(rs.getString("family"));
                     Car car = new Car();
                     List<Car> cars = new ArrayList<>();
@@ -73,7 +73,39 @@ public class MySqlUserDAO implements UserDao {
                 user.setNameFirst(rs.getString("name"));
                 user.setNameLast(rs.getString("family"));
                 user.setSalary(rs.getInt("salary"));
-                System.out.println("DB users size: " + user);
+                return user;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public User getUserById(int id) {
+        String query = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id;";
+        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(query)) {
+            ResultSet rs = stmt.executeQuery();
+            int count = 0;
+            if (rs.getInt(1) == id && count == 0) {
+                User user = new User();
+                user.setId(id);
+                user.setNameFirst(rs.getString(2));
+                user.setNameLast(rs.getString("family"));
+                Car car = new Car();
+                List<Car> cars = new ArrayList<>();
+                car.setId(rs.getInt("car_id"));
+                car.setName(rs.getString(10));
+                cars.add(car);
+                user.setCars(cars);
+                count++;
+                return user;
+            }
+            else{
+                User user = new User();
+                Car car = new Car();
+                car.setId(rs.getInt("car_id"));
+                car.setName(rs.getString(10));
+                user.getCars().add(car);
                 return user;
             }
         } catch (SQLException e) {
