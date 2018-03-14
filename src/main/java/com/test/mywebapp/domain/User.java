@@ -1,17 +1,20 @@
 package com.test.mywebapp.domain;
 
+import java.util.List;
+
 public class User {
-    private Long id;
+    private int id;
     private String nameFirst;
     private String nameLast;
     private int age;
     private int salary;
+    private List<Car> cars;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -47,13 +50,21 @@ public class User {
         this.salary = salary;
     }
 
+    public List<Car> getCars() {
+        return cars;
+    }
+
+    public void setCars(List<Car> cars) {
+        this.cars = cars;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "nameFirst='" + nameFirst + '\'' +
+                "id=" + id +
+                ", nameFirst='" + nameFirst + '\'' +
                 ", nameLast='" + nameLast + '\'' +
-                ", age=" + age +
-                ", salary=" + salary +
+                ", cars=" + cars +
                 '}';
     }
 }

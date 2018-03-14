@@ -1,4 +1,5 @@
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <html>
 <head>
 <title>ALL Users</title>
@@ -7,6 +8,8 @@
    p { padding: 10px; }
    #left { position: absolute; left: 11; width: 70%; }
    #right { position: absolute; right: 0; top: 5; width: 30%; }
+
+
     h2{
     font-size:18px;
     }
@@ -15,6 +18,7 @@
         width: 80%;
         border: thin solid black;
         table-layout: fixed;
+
    }
    tbody td {
        font-size: 100%;
@@ -30,6 +34,9 @@
                   <th>Id</th>
                   <th>First name</th>
                   <th>Last name</th>
+                  <th align="center">Car size</th>
+                  <th>Car name</th>
+                  <th></th>
                </tr>
             </thead>
             <tbody >
@@ -38,10 +45,14 @@
                     <td>${user.id}</td>
                     <td>${user.nameFirst}</td>
                     <td>${user.nameLast}</td>
+                    <td align="center">${user.cars.size()}</td>
+                    <td><c:out value="${user.cars}"/></td>
+                    <td align="center"><button><a href="/mywebapp/user?userId=${user.id}">view</a></button></td>
                     </tr>
                </c:forEach>
             </tbody>
         </table><br>
+
     </div>
 
     <div id = "right">

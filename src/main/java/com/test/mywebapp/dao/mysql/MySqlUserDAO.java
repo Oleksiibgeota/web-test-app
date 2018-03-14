@@ -1,6 +1,7 @@
 package com.test.mywebapp.dao.mysql;
 
 import com.test.mywebapp.dao.UserDao;
+import com.test.mywebapp.domain.Car;
 import com.test.mywebapp.domain.User;
 
 import java.sql.Connection;
@@ -8,29 +9,57 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MySqlUserDAO implements UserDao {
 
     private MySqlDBConnection dbConnection = new MySqlDBConnection("jdbc/TestDB");
 
     public List<User> getAllUsers() {
-        List<User> users = new ArrayList<>();
-        String query = "SELECT * FROM user;";
+        Map<Integer, User> usersMap = new HashMap<>();
+        String query = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id;";
         try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(query)) {
             ResultSet rs = stmt.executeQuery();
+
             while (rs.next()) {
-                User user = new User();
-                user.setId(rs.getLong("id"));
-                user.setNameFirst(rs.getString("name"));
-                user.setNameLast(rs.getString("family"));
-                users.add(user);
+                int userId = rs.getInt(1);
+                if (usersMap.containsKey(userId)) {
+                    User user = usersMap.get(userId);
+                    Car car = new Car();
+                    List<Car> cars = new ArrayList<>();
+                    rs.getInt("car_id");
+                    car.setId(rs.getInt("car_id"));
+                    car.setName(rs.getString(10));
+                    user.getCars().add(car);
+
+//                    user.setCars(cars);
+                    usersMap.put(userId, user);
+
+
+                } else {
+
+                    User user = new User();
+                    user.setId(userId);
+                    user.setNameFirst(rs.getString("name"));
+                    user.setNameLast(rs.getString("family"));
+                    Car car = new Car();
+                    List<Car> cars = new ArrayList<>();
+                    rs.getInt("car_id");
+                    car.setId(rs.getInt("car_id"));
+                    car.setName(rs.getString(10));
+                    cars.add(car);
+                    user.setCars(cars);
+                    usersMap.put(userId, user);
+
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("DB users size: " + users.size());
-        return users;
+        System.out.println(new ArrayList<User>(usersMap.values()));
+        return new ArrayList<User>(usersMap.values());
     }
 
     public User getUserByName(String name) {
@@ -40,7 +69,7 @@ public class MySqlUserDAO implements UserDao {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 User user = new User();
-                user.setId(rs.getLong("id"));
+                user.setId(rs.getInt("id"));
                 user.setNameFirst(rs.getString("name"));
                 user.setNameLast(rs.getString("family"));
                 user.setSalary(rs.getInt("salary"));
