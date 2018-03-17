@@ -15,12 +15,17 @@
    table {
         font-size:25px;
         width: 80%;
+        border-collapse: collapse;
         border: thin solid black;
         table-layout: fixed;
 
    }
+    TD, TH {
+            padding: 3px;
+            border: 1px solid black;
+    }
    tbody td {
-       font-size: 100%;
+            font-size: 100%;
    }
 </style>
 </head>
@@ -30,11 +35,10 @@
         <table border="0" cellpadding="10">
             <thead>
                 <tr align="left">
-                  <th>Id</th>
-                  <th>First name</th>
-                  <th>Last name</th>
-                  <th>Cars</th>
-                  <th></th>
+                  <th width ="12%">Id</th>
+                  <th width ="23%">First name</th>
+                  <th width ="23%">Last name</th>
+                  <th width ="42%">Cars</th>
                </tr>
             </thead>
             <tbody >

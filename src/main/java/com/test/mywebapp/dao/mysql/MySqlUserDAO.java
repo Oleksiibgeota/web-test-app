@@ -75,27 +75,23 @@ public class MySqlUserDAO implements UserDao {
 
     public User getUserById(int id) {
         String query = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id;";
+        User user = new User();
+        List<Car> cars = new ArrayList<>();
         try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(query)) {
             ResultSet rs = stmt.executeQuery();
-            System.out.println("getUser get ID from request= " + id);
-
             int count = 0;
             while (rs.next()) {
-                User user = new User();
-                Car car = new Car();
-                List<Car> cars = new ArrayList<>();
-                if (rs.getInt(1) == id && count > 0) {
+                System.out.println("count before = " + count);
+                int getId = rs.getInt(1);
+                if (getId == id && count > 0) {
+                    Car car = new Car();
                     car.setId(rs.getInt("car_id"));
                     car.setName(rs.getString(10));
-                    System.out.println("user getCar" + user.getCars());
-                    List<Car> car2 = user.getCars();
-                    car2.add(car);
-                    user.setCars(car2);
-                    System.out.println(user.getCars().add(car));
+                    user.getCars().add(car);
+//                    System.out.println("user.getCars().add(car)   printed =  " + user.getCars().add(car) + "why");
                     System.out.println("getUserById  user method two= " + user);
-                    return user;
-
-                } else if (rs.getInt("id") == id && count == 0) {
+                } else if (getId == id && count == 0) {
+                    Car car = new Car();
                     System.out.println("step1 from get userbyid");
                     user.setId(id);
                     user.setNameFirst(rs.getString(2));
@@ -106,14 +102,16 @@ public class MySqlUserDAO implements UserDao {
                     user.setCars(cars);
                     System.out.println("getUserById  user= " + user);
                     count++;
-                    System.out.println(count);
-                    return user;
+                    System.out.println("count in loop one = " + count);
+                } else {
+                    System.out.println("method else");
                 }
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return user;
     }
 
     @Override
