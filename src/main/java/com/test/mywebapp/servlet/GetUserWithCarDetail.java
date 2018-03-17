@@ -8,17 +8,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 public class GetUserWithCarDetail extends HttpServlet {
 
     private MySqlUserDAO userDAO = new MySqlUserDAO();
 
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<User> users = userDAO.getAllUsers();
-        req.setAttribute("users", users);
-        req.getRequestDispatcher("all-users.jsp").forward(req, resp);
+        int id = Integer.valueOf(req.getParameter("userId"));
+
+        User user = userDAO.getUserById(id);
+        System.out.println("id = " + id);
+        System.out.println("doGet = " + user);
+
+        req.setAttribute("user", user);
+        req.getRequestDispatcher("user.jsp").forward(req, resp);
     }
 }
 

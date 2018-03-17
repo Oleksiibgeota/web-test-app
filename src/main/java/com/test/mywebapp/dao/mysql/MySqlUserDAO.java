@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 public class MySqlUserDAO implements UserDao {
-
-    private MySqlDBConnection dbConnection = new MySqlDBConnection("jdbc/TestDB");
+    MySqlDBConnection dbConnection = MySqlDBConnection.getInstance();
+//    private MySqlDBConnection dbConnection = new MySqlDBConnection("jdbc/TestDB");
 
     public List<User> getAllUsers() {
         Map<Integer, User> usersMap = new HashMap<>();
@@ -78,27 +78,40 @@ public class MySqlUserDAO implements UserDao {
         String query = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id;";
         try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(query)) {
             ResultSet rs = stmt.executeQuery();
+            System.out.println("getUser get ID from request= " + id);
+
             int count = 0;
-            if (rs.getInt(1) == id && count == 0) {
+            while (rs.next()) {
                 User user = new User();
-                user.setId(id);
-                user.setNameFirst(rs.getString(2));
-                user.setNameLast(rs.getString("family"));
                 Car car = new Car();
                 List<Car> cars = new ArrayList<>();
-                car.setId(rs.getInt("car_id"));
-                car.setName(rs.getString(10));
-                cars.add(car);
-                user.setCars(cars);
-                count++;
-                return user;
-            } else {
-                User user = new User();
-                Car car = new Car();
-                car.setId(rs.getInt("car_id"));
-                car.setName(rs.getString(10));
-                user.getCars().add(car);
-                return user;
+                if (rs.getInt(1) == id && count > 0) {
+                    car.setId(rs.getInt("car_id"));
+                    car.setName(rs.getString(10));
+                    System.out.println("user getCar" + user.getCars());
+                    List<Car> car2= user.getCars();
+                    car2.add(car);
+                    user.setCars(car2);
+                    System.out.println(user.getCars().add(car));
+                    System.out.println("getUserById  user method two= " + user);
+                    return user;
+
+                } else if (rs.getInt("id") == id && count == 0) {
+                    System.out.println("step1 from get userbyid");
+                    user.setId(id);
+                    user.setNameFirst(rs.getString(2));
+                    user.setNameLast(rs.getString("family"));
+                    car.setId(rs.getInt("car_id"));
+                    car.setName(rs.getString(10));
+                    cars.add(car);
+                    user.setCars(cars);
+                    System.out.println("getUserById  user= " + user);
+                    count++;
+                    System.out.println(count);
+                    return user;
+
+
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -8,6 +8,8 @@ public interface UserDao {
 
     List<User> getAllUsers();
 
+    User getUserById(int id);
+
     User getUserByName(String name);
 
     void createUser(String firstName, String lastName);

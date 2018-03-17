@@ -10,19 +10,27 @@ import java.util.concurrent.atomic.AtomicLong;
 public class MySqlDBConnection {
 
     private DataSource dataSource;
-
+    private static MySqlDBConnection instance;
     private static final AtomicLong COUNT = new AtomicLong(0);
 
-    public MySqlDBConnection(final String jndiname) {
+
+    private MySqlDBConnection() {
         System.out.println("new connection =  " + COUNT.incrementAndGet());
         try {
-            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/" + jndiname);
+            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/TestDB");
         } catch (NamingException e) {
-            throw new IllegalStateException(jndiname + " is missing in JNDI!", e);
+            throw new IllegalStateException("jdbc/TestDB" + " is missing in JNDI!", e);
         }
     }
 
     public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
+    }
+
+    public static synchronized MySqlDBConnection getInstance() {
+        if (instance == null) {
+            instance = new MySqlDBConnection();
+        }
+        return instance;
     }
 }
