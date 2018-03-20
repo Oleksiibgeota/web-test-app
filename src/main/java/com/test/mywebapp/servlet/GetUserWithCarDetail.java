@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GetUserWithCarDetail extends HttpServlet {
@@ -20,10 +19,8 @@ public class GetUserWithCarDetail extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int id = Integer.valueOf(req.getParameter("userId"));
         User user = userDAO.getUserById(id);
-        System.out.println("id = " + id);
-        System.out.println("doGet = " + user);
-        List<Car> cars = new ArrayList<>();
-        cars = user.getCars();
+        List<Car> cars = userDAO.getListCarFromUser(id);
+        System.out.println("cars from user id = " + id + " " + cars);
         req.setAttribute("cars", cars);
         req.setAttribute("user", user);
         req.getRequestDispatcher("user.jsp").forward(req, resp);

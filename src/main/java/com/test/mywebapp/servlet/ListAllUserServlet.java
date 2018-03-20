@@ -1,6 +1,7 @@
 package com.test.mywebapp.servlet;
 
 import com.test.mywebapp.dao.mysql.MySqlUserDAO;
+import com.test.mywebapp.domain.Car;
 import com.test.mywebapp.domain.User;
 
 import javax.servlet.ServletException;
