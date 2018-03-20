@@ -73,6 +73,23 @@ public class MySqlUserDAO implements UserDao {
         return null;
     }
 
+    public List<Car> getListCarFromUser(String userId) {
+        String query = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id WHERE user.id=?;";
+        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(query)) {
+            stmt.setInt(1, Integer.parseInt(userId));
+            ResultSet rs = stmt.executeQuery();
+            List<Car> cars = new ArrayList<>();
+            Car car= new Car();
+            while (rs.next()) {
+                car.setName(rs.getString(10));
+                cars.add(car);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public User getUserById(int id) {
         String query = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id;";
         User user = new User();
