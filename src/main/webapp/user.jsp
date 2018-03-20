@@ -7,8 +7,6 @@
    p { padding: 10px; }
    #left { position: absolute; left: 11; width: 70%; }
    #right { position: absolute; right: 0; top: 5; width: 30%; }
-
-
     h2{
     font-size:18px;
     }
@@ -18,7 +16,6 @@
         border-collapse: collapse;
         border: thin solid black;
         table-layout: fixed;
-
    }
     TD, TH {
             padding: 3px;
@@ -38,7 +35,7 @@
                   <th width ="12%">Id</th>
                   <th width ="23%">First name</th>
                   <th width ="23%">Last name</th>
-                  <th width ="42%">Cars</th>
+                  <th width = "42%">car</th>
                </tr>
             </thead>
             <tbody >
@@ -46,13 +43,21 @@
                     <td>${user.id}</td>
                     <td>${user.nameFirst}</td>
                     <td>${user.nameLast}</td>
-                    <td>${user.cars}</td>
-                    </tr>
+                    <td>
+                        <table  border="0" cellpadding="10">
+                            <thead>
+                            </thead>
+                            <tbody>
+                                <c:forEach items="${cars}" var="car">
+                                    <tr>
+                                        <td>${car.name}</td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
             </tbody>
         </table><br>
-
     </div>
-
     <div id = "right">
         <a href="/mywebapp/">All Users</a>
         <a href="/mywebapp/create">Create user</a>
