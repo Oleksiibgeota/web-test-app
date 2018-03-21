@@ -105,7 +105,6 @@ public class MySqlUserDAO implements UserDao {
                 if (getId == id && count > 0) {
                 } else if (getId == id && count == 0) {
                     Car car = new Car();
-                    System.out.println("step1 from get userbyid");
                     user.setId(id);
                     user.setNameFirst(rs.getString(2));
                     user.setNameLast(rs.getString("family"));
