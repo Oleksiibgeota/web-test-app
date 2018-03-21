@@ -17,8 +17,8 @@ public class MySqlUserDAO implements UserDao {
     private MySqlDBConnection dbConnection = MySqlDBConnection.getInstance();
 
     public List<User> getAllUsers() {
-        Map<Integer, User> usersMap = new HashMap<>();
         String query = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id;";
+        Map<Integer, User> usersMap = new HashMap<>();
         try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(query)) {
             ResultSet rs = stmt.executeQuery();
 
@@ -113,11 +113,7 @@ public class MySqlUserDAO implements UserDao {
                     car.setName(rs.getString(10));
                     cars.add(car);
                     user.setCars(cars);
-                    System.out.println("getUserById  user= " + user);
-                    count++;
-                    System.out.println("count in loop one = " + count);
-                } else {
-                    System.out.println("method else");
+                    System.out.println("count in loop one = " + count++);
                 }
             }
 
