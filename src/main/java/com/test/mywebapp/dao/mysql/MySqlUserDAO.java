@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MySqlUserDAO implements UserDao {
-    MySqlDBConnection dbConnection = MySqlDBConnection.getInstance();
+    private MySqlDBConnection dbConnection = MySqlDBConnection.getInstance();
 
     public List<User> getAllUsers() {
         Map<Integer, User> usersMap = new HashMap<>();
@@ -103,12 +103,6 @@ public class MySqlUserDAO implements UserDao {
                 System.out.println("count before = " + count);
                 int getId = rs.getInt(1);
                 if (getId == id && count > 0) {
-                    Car car = new Car();
-                    car.setId(rs.getInt("car_id"));
-                    car.setName(rs.getString(10));
-                    user.getCars().add(car);
-//                    System.out.println("user.getCars().add(car)   printed =  " + user.getCars().add(car) + "why");
-                    System.out.println("getUserById  user method two= " + user);
                 } else if (getId == id && count == 0) {
                     Car car = new Car();
                     System.out.println("step1 from get userbyid");
