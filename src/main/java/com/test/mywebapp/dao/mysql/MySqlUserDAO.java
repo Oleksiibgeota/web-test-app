@@ -15,11 +15,11 @@ import java.util.Map;
 
 public class MySqlUserDAO implements UserDao {
     private MySqlDBConnection dbConnection = MySqlDBConnection.getInstance();
-
+    private static String queryJoinUserWithCar = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id;";
     public List<User> getAllUsers() {
-        String query = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id;";
+
         Map<Integer, User> usersMap = new HashMap<>();
-        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(query)) {
+        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(queryJoinUserWithCar)) {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -93,10 +93,9 @@ public class MySqlUserDAO implements UserDao {
     }
 
     public User getUserById(int id) {
-        String query = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id;";
         User user = new User();
         List<Car> cars = new ArrayList<>();
-        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(query)) {
+        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(queryJoinUserWithCar)) {
             ResultSet rs = stmt.executeQuery();
             int count = 0;
             while (rs.next()) {
