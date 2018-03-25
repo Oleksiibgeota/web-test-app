@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class CreateUserServlet extends HttpServlet {
+public class CreateCarServlet extends HttpServlet {
 
     private MySqlUserDAO userDAO = new MySqlUserDAO();
 
@@ -19,13 +19,13 @@ public class CreateUserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String firstName = req.getParameter("firstname");
-        String lastName = req.getParameter("lastname");
-        if (req.getParameter("action").equals("Delete")) {
-            userDAO.deleteUserByFirstNameAndLastName(firstName, lastName);
-        } else if (req.getParameter("action").equals("Create")) {
-            userDAO.createUser(firstName, lastName);
+        String carName = req.getParameter("carName");
+        String idUser = req.getParameter("idUser");
+         if (req.getParameter("actionForCar").equals("Delete")) {
+            userDAO.deleteCarByUserIdAndCarName(Integer.parseInt(idUser), carName);
+        } else if (req.getParameter("actionForCar").equals("Create")) {
+            userDAO.createCarForUser(Integer.parseInt(idUser), carName);
         }
-        resp.sendRedirect("/mywebapp/createUser");
+        resp.sendRedirect("/mywebapp/createCar");
     }
 }

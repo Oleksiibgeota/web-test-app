@@ -31,7 +31,16 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>CreateUserServlet</servlet-name>
-        <url-pattern>/create</url-pattern>
+        <url-pattern>/createUser</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CreateCarServlet</servlet-name>
+        <servlet-class>com.test.mywebapp.servlet.CreateCarServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateCarServlet</servlet-name>
+        <url-pattern>/createCar</url-pattern>
     </servlet-mapping>
 
     <servlet>

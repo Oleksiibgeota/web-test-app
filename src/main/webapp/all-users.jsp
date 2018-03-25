@@ -69,6 +69,8 @@
     <div id = "right">
         <a href="/mywebapp/">All Users</a>
         <a href="/mywebapp/create">Create user</a>
+        <a href="/mywebapp/createUser">Create user</a>
+        <a href="/mywebapp/createCar">Create Car</a>
         <a href="/mywebapp/get">View user</a>
     </div>
 </body>

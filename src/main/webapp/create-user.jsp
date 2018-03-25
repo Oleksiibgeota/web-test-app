@@ -12,7 +12,7 @@
     <div id="left">
         <h1>Create user</h1>
         <h2>Add user form</h2>
-        <form action="/mywebapp/create" method="POST">
+        <form action="/mywebapp/createUser" method="POST">
             name<br>
             <input type="text" name="firstname"><br>
             Last name:<br>
@@ -20,7 +20,7 @@
             <input type="submit" name = "action" value="Create">
             <input type="submit" name = "action" value="Delete">
         </form>
-        <form action="/mywebapp/create" method="POST">
+        <form action="/mywebapp/createCar" method="POST">
                     id user<br>
                     <input type="text" name="idUser"><br>
                     car name<br>
@@ -31,7 +31,8 @@
     </div>
     <div id = "right">
         <a href="/mywebapp/">All Users</a>
-        <a href="/mywebapp/create">Create user</a>
+        <a href="/mywebapp/createUser">Create user</a>
+        <a href="/mywebapp/createCar">Create Car</a>
         <a href="/mywebapp/get">View user</a>
     </div>
 </body>
