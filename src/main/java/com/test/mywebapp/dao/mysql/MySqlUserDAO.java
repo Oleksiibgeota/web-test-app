@@ -15,57 +15,64 @@ import java.util.Map;
 
 public class MySqlUserDAO implements UserDao {
     private MySqlDBConnection dbConnection = MySqlDBConnection.getInstance();
-    private static String queryJoinUserWithCar = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id;";
+    private static final String QUERY_GET_ALL_USERS_WITH_CAR = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id;";
+    private static final String QUERY_GET_USER_BY_ID_WITH_CAR = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id WHERE user.id = ?;";
+    private static final String QUERY_GET_USER_BY_ID = "SELECT * FROM user WHERE name = ?;";
+    private static final String QUERY_GET_LIST_CAR_FROM_USER = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id WHERE user.id=?;";
+    private static final String QUERY_CREATE_CAR = "INSERT INTO user (name, family, salary) VALUES (?,?,?);";
+    private static final String QUERY_UPDATE_USER = "UPDATE user SET name = ?, family = ? WHERE id = ?;";
+    private static final String QUERY_DELETE_USER_BY_FIRST_NAME_AND_LAST_NAME = "DELETE FROM user WHERE name = ? and family = ?;";
+    private static final String QUERY_DELETE_CAR_FROM_USER_BY_USER_ID = "DELETE FROM user_car WHERE user_id = ? and car_id = ?";
+    private static final String QUERY_GET_CAR_ID_BY_NAME_CAR = "SELECT * FROM car WHERE name = ?;";
+
+    private User populateUser(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setId(rs.getInt("id"));
+        user.setNameFirst(rs.getString(2));
+        user.setNameLast(rs.getString("family"));
+        return user;
+    }
+
+    private Car populateCar(ResultSet rs) throws SQLException {
+        Car car = new Car();
+        car.setId(rs.getInt("car_id"));
+        car.setName(rs.getString(10));
+        return car;
+    }
+
     public List<User> getAllUsers() {
-
         Map<Integer, User> usersMap = new HashMap<>();
-        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(queryJoinUserWithCar)) {
+        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_GET_ALL_USERS_WITH_CAR)) {
             ResultSet rs = stmt.executeQuery();
-
             while (rs.next()) {
                 int userId = rs.getInt(1);
                 if (usersMap.containsKey(userId)) {
                     User user = usersMap.get(userId);
-                    Car car = new Car();
-                    rs.getInt("car_id");
-                    car.setId(rs.getInt("car_id"));
-                    car.setName(rs.getString(10));
+                    Car car = populateCar(rs);
                     user.getCars().add(car);
-                    usersMap.put(userId, user);
                 } else {
-                    User user = new User();
-                    user.setId(userId);
-                    user.setNameFirst(rs.getString(2));
-                    user.setNameLast(rs.getString("family"));
-                    Car car = new Car();
-                    List<Car> cars = new ArrayList<>();
-                    rs.getInt("car_id");
-                    car.setId(rs.getInt("car_id"));
-                    car.setName(rs.getString(10));
-                    cars.add(car);
-                    user.setCars(cars);
+                    User user = populateUser(rs);
+                    user.setCars(new ArrayList<>());
+                    if (rs.getInt("car_id") != 0) {
+                        Car car = populateCar(rs);
+                        user.getCars().add(car);
+                    }
                     usersMap.put(userId, user);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println(new ArrayList<User>(usersMap.values()));
-        return new ArrayList<User>(usersMap.values());
+        System.out.println(usersMap.values());
+        return new ArrayList<>(usersMap.values());
     }
 
     public User getUserByName(String name) {
-        String query = "SELECT * FROM user WHERE name = ?;";
-        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(query)) {
+        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_GET_USER_BY_ID)) {
             stmt.setString(1, name);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                User user = new User();
-                user.setId(rs.getInt("id"));
-                user.setNameFirst(rs.getString("name"));
-                user.setNameLast(rs.getString("family"));
-                user.setSalary(rs.getInt("salary"));
-                return user;
+                return populateUser(rs);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -74,14 +81,13 @@ public class MySqlUserDAO implements UserDao {
     }
 
     public List<Car> getListCarFromUser(int userId) {
-        String query = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id WHERE user.id=?;";
-        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(query)) {
-            stmt.setInt(1, (userId));
+        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_GET_LIST_CAR_FROM_USER)) {
+            stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
+
             List<Car> cars = new ArrayList<>();
             while (rs.next()) {
-                Car car = new Car();
-                car.setName(rs.getString(10));
+                Car car = populateCar(rs);
                 cars.add(car);
                 System.out.println(car);
             }
@@ -92,39 +98,60 @@ public class MySqlUserDAO implements UserDao {
         return null;
     }
 
-    public User getUserById(int id) {
-        User user = new User();
-        List<Car> cars = new ArrayList<>();
-        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(queryJoinUserWithCar)) {
+    public int getCarIdByCarName(String carName) {
+        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_GET_CAR_ID_BY_NAME_CAR)) {
+            stmt.setString(1, carName);
             ResultSet rs = stmt.executeQuery();
-            int count = 0;
             while (rs.next()) {
-                System.out.println("count before = " + count);
-                int getId = rs.getInt(1);
-                if (getId == id && count > 0) {
-                } else if (getId == id && count == 0) {
-                    Car car = new Car();
-                    user.setId(id);
-                    user.setNameFirst(rs.getString(2));
-                    user.setNameLast(rs.getString("family"));
-                    car.setId(rs.getInt("car_id"));
-                    car.setName(rs.getString(10));
-                    cars.add(car);
-                    user.setCars(cars);
-                    System.out.println("count in loop one = " + count++);
-                }
+                return rs.getInt("id");
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return user;
+        return Integer.parseInt(null);
+    }
+
+    public void createCarForUser(int userId, String carName) {
+//        create method createCarFor User
+    }
+
+    public void deleteCarByUserIdAndCarName(int userId, String carName) {
+        int carId = getCarIdByCarName(carName);
+        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_DELETE_CAR_FROM_USER_BY_USER_ID)) {
+            stmt.setInt(1, userId);
+            stmt.setInt(2, carId);
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public User getUserById(int id) {
+        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_GET_USER_BY_ID_WITH_CAR)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (!rs.wasNull()) {
+                User user = new User();
+                user.setCars(new ArrayList<>());
+                while (rs.next()) {
+                    user.setId(rs.getInt("id"));
+                    user.setNameFirst(rs.getString(2));
+                    user.setNameLast(rs.getString("family"));
+                    Car car = populateCar(rs);
+                    user.getCars().add(car);
+                }
+                return user;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
     public void createUser(String firstName, String lastName) {
-        String query = "INSERT INTO user (name, family, salary) VALUES (?,?,?);";
-        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(query)) {
+        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_CREATE_CAR)) {
             int salary = (int) (Math.random() * 2000);
             stmt.setString(1, firstName);
             stmt.setString(2, lastName);
@@ -139,10 +166,10 @@ public class MySqlUserDAO implements UserDao {
         }
     }
 
+
     @Override
     public void updateUser(int id, String firstName, String lastName) {
-        String query = "UPDATE user SET name = ?, family = ? WHERE id = ?;";
-        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(query)) {
+        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_UPDATE_USER)) {
             stmt.setString(1, firstName);
             stmt.setString(2, lastName);
             stmt.setInt(3, id);
@@ -154,8 +181,7 @@ public class MySqlUserDAO implements UserDao {
 
     @Override
     public void deleteUserByFirstNameAndLastName(String firstName, String lastName) {
-        String query = "DELETE FROM user WHERE name = ? and family = ?;";
-        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(query)) {
+        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_DELETE_USER_BY_FIRST_NAME_AND_LAST_NAME)) {
             stmt.setString(1, firstName);
             stmt.setString(2, lastName);
             stmt.execute();

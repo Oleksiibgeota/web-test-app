@@ -20,6 +20,14 @@
             <input type="submit" name = "action" value="Create">
             <input type="submit" name = "action" value="Delete">
         </form>
+        <form action="/mywebapp/create" method="POST">
+                    id user<br>
+                    <input type="text" name="idUser"><br>
+                    car name<br>
+                    <input type="text" name="carName"><br>
+                    <input type="submit" name = "actionForCar" value="Create">
+                    <input type="submit" name = "actionForCar" value="Delete">
+                </form>
     </div>
     <div id = "right">
         <a href="/mywebapp/">All Users</a>

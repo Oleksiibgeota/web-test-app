@@ -46,7 +46,18 @@
                     <td>${user.nameFirst}</td>
                     <td>${user.nameLast}</td>
                     <td align="center">${user.cars.size()}</td>
-                    <td><c:out value="${user.cars}"/></td>
+                    <td>
+                        <c:choose>
+                         <c:when test = "${user.cars.size() eq 0}">
+                            <p>no cars</p>
+                         </c:when>
+                         <c:otherwise>
+                         <c:forEach items="${user.cars}" var="car">
+                             <c:out value="${car.name}"/>
+                             </c:forEach>
+                         </c:otherwise>
+                        </c:choose>
+                    </td>
                     <td align="center"><button><a href="/mywebapp/user?userId=${user.id}">view</a></button></td>
                     </tr>
                </c:forEach>

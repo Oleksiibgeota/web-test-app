@@ -33,7 +33,9 @@ public class Car {
 
     @Override
     public String toString() {
-        String car = name == null ? "not car" : String.valueOf(name);
-        return car;
+        return "Car{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

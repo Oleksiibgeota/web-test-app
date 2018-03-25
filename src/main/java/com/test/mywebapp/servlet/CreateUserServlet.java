@@ -19,14 +19,27 @@ public class CreateUserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String firstName = req.getParameter("firstname");
-        String lastName = req.getParameter("lastname");
+//        String firstName = req.getParameter("firstname");
+//        String lastName = req.getParameter("lastname");
 
-        if (req.getParameter("action").equals("Delete")) {
-            userDAO.deleteUserByFirstNameAndLastName(firstName, lastName);
-        } else if (req.getParameter("action").equals("Create")) {
-            userDAO.createUser(firstName, lastName);
+        String carName = req.getParameter("carName");
+        String idUser = req.getParameter("idUser");
+
+//        if (req.getParameter("action").equals("Delete")) {
+//            userDAO.deleteUserByFirstNameAndLastName(firstName, lastName);
+//        } else if (req.getParameter("action").equals("Create")) {
+//            userDAO.createUser(firstName, lastName);
+//        }
+
+
+        if (req.getParameter("actionForCar").equals("Delete")) {
+            System.out.println("get parameter action for car delete " + req.getParameter("actionForCar"));
+            userDAO.deleteCarByUserIdAndCarName(Integer.parseInt(idUser), carName);
+        } else if (req.getParameter("actionForCar").equals("Create")) {
+            userDAO.createCarForUser(Integer.parseInt(idUser), carName);
         }
+
+
         resp.sendRedirect("/mywebapp/create");
     }
 }

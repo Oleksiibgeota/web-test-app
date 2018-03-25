@@ -58,6 +58,7 @@
                     </td>
             </tbody>
         </table><br>
+
     </div>
     <div id = "right">
         <a href="/mywebapp/">All Users</a>
