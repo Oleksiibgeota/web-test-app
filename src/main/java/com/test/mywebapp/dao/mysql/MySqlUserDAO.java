@@ -15,13 +15,14 @@ import java.util.Map;
 
 public class MySqlUserDAO implements UserDao {
     private MySqlDBConnection dbConnection = MySqlDBConnection.getInstance();
-    private static final String QUERY_GET_ALL_USERS_WITH_CAR = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id;";
-    private static final String QUERY_GET_USER_BY_ID_WITH_CAR = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id WHERE user.id = ?;";
-    private static final String QUERY_GET_USER_BY_ID = "SELECT * FROM user WHERE name = ?;";
     private static final String QUERY_GET_LIST_CAR_FROM_USER = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id WHERE user.id=?;";
-    private static final String QUERY_CREATE_CAR = "INSERT INTO user (name, family, salary) VALUES (?,?,?);";
+    private static final String QUERY_CREATE_USER = "INSERT INTO user (name, family, salary) VALUES (?,?,?);";
     private static final String QUERY_UPDATE_USER = "UPDATE user SET name = ?, family = ? WHERE id = ?;";
     private static final String QUERY_DELETE_USER_BY_FIRST_NAME_AND_LAST_NAME = "DELETE FROM user WHERE name = ? and family = ?;";
+    private static final String QUERY_GET_USER_BY_ID = "SELECT * FROM user WHERE name = ?;";
+    private static final String QUERY_GET_USER_BY_ID_WITH_CAR = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id WHERE user.id = ?;";
+    private static final String QUERY_GET_ALL_USERS_WITH_CAR = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id;";
+    private static final String QUERY_CREATE_CAR_FOR_USER = "INSERT INTO user_car (user_id, car_id) VALUES (?,?);";
     private static final String QUERY_DELETE_CAR_FROM_USER_BY_USER_ID = "DELETE FROM user_car WHERE user_id = ? and car_id = ?";
     private static final String QUERY_GET_CAR_ID_BY_NAME_CAR = "SELECT * FROM car WHERE name = ?;";
 
@@ -84,7 +85,6 @@ public class MySqlUserDAO implements UserDao {
         try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_GET_LIST_CAR_FROM_USER)) {
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
-
             List<Car> cars = new ArrayList<>();
             while (rs.next()) {
                 Car car = populateCar(rs);
@@ -98,7 +98,7 @@ public class MySqlUserDAO implements UserDao {
         return null;
     }
 
-    public int getCarIdByCarName(String carName) {
+    private int getCarIdByCarName(String carName) {
         try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_GET_CAR_ID_BY_NAME_CAR)) {
             stmt.setString(1, carName);
             ResultSet rs = stmt.executeQuery();
@@ -112,7 +112,14 @@ public class MySqlUserDAO implements UserDao {
     }
 
     public void createCarForUser(int userId, String carName) {
-//        create method createCarFor User
+        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_CREATE_CAR_FOR_USER)) {
+            int carId = getCarIdByCarName(carName);
+            stmt.setInt(1, userId);
+            stmt.setInt(2,carId);
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void deleteCarByUserIdAndCarName(int userId, String carName) {
@@ -151,7 +158,7 @@ public class MySqlUserDAO implements UserDao {
 
     @Override
     public void createUser(String firstName, String lastName) {
-        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_CREATE_CAR)) {
+        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_CREATE_USER)) {
             int salary = (int) (Math.random() * 2000);
             stmt.setString(1, firstName);
             stmt.setString(2, lastName);

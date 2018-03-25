@@ -8,8 +8,6 @@
    p { padding: 10px; }
    #left { position: absolute; left: 11; width: 70%; }
    #right { position: absolute; right: 0; top: 5; width: 30%; }
-
-
     h2{
     font-size:18px;
     }
@@ -63,12 +61,9 @@
                </c:forEach>
             </tbody>
         </table><br>
-
     </div>
-
     <div id = "right">
         <a href="/mywebapp/">All Users</a>
-        <a href="/mywebapp/create">Create user</a>
         <a href="/mywebapp/createUser">Create user</a>
         <a href="/mywebapp/createCar">Create Car</a>
         <a href="/mywebapp/get">View user</a>

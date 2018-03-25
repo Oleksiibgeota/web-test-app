@@ -27,7 +27,7 @@
                     <input type="text" name="carName"><br>
                     <input type="submit" name = "actionForCar" value="Create">
                     <input type="submit" name = "actionForCar" value="Delete">
-                </form>
+        </form>
     </div>
     <div id = "right">
         <a href="/mywebapp/">All Users</a>
