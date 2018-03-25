@@ -22,6 +22,7 @@ public class MySqlUserDAO implements UserDao {
     private static final String QUERY_GET_USER_BY_ID = "SELECT * FROM user WHERE name = ?;";
     private static final String QUERY_GET_USER_BY_ID_WITH_CAR = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id WHERE user.id = ?;";
     private static final String QUERY_GET_ALL_USERS_WITH_CAR = "SELECT * FROM user LEFT JOIN user_car ON user.id = user_car.user_id LEFT JOIN car ON user_car.car_id = car.id;";
+    private static final String QUERY_CREATE_CAR = "INSERT INTO car (name) VALUE (?);";
     private static final String QUERY_CREATE_CAR_FOR_USER = "INSERT INTO user_car (user_id, car_id) VALUES (?,?);";
     private static final String QUERY_DELETE_CAR_FROM_USER_BY_USER_ID = "DELETE FROM user_car WHERE user_id = ? and car_id = ?";
     private static final String QUERY_GET_CAR_ID_BY_NAME_CAR = "SELECT * FROM car WHERE name = ?;";
@@ -98,24 +99,55 @@ public class MySqlUserDAO implements UserDao {
         return null;
     }
 
+    private int getCarIdByCarNameNewCar(String carName) {
+        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_GET_CAR_ID_BY_NAME_CAR)) {
+            stmt.setString(1, carName);
+            ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    return id;
+                }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     private int getCarIdByCarName(String carName) {
         try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_GET_CAR_ID_BY_NAME_CAR)) {
             stmt.setString(1, carName);
             ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                return rs.getInt("id");
+            if (!rs.wasNull()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    return id;
+                }
+            } else {
+                createCar(carName);
+                int id = getCarIdByCarNameNewCar(carName);
+                return id;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return Integer.parseInt(null);
+        return 0;
+    }
+
+    public void createCar(String name) {
+        try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_CREATE_CAR)) {
+            stmt.setString(1, name);
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return;
     }
 
     public void createCarForUser(int userId, String carName) {
         try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_CREATE_CAR_FOR_USER)) {
             int carId = getCarIdByCarName(carName);
             stmt.setInt(1, userId);
-            stmt.setInt(2,carId);
+            stmt.setInt(2, carId);
             stmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
