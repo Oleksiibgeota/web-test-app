@@ -99,14 +99,15 @@ public class MySqlUserDAO implements UserDao {
         return null;
     }
 
+
     private int getCarIdByCarNameNewCar(String carName) {
         try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_GET_CAR_ID_BY_NAME_CAR)) {
             stmt.setString(1, carName);
             ResultSet rs = stmt.executeQuery();
-                while (rs.next()) {
-                    int id = rs.getInt("id");
-                    return id;
-                }
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                return id;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -114,23 +115,23 @@ public class MySqlUserDAO implements UserDao {
     }
 
     private int getCarIdByCarName(String carName) {
+        int id = 0;
         try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_GET_CAR_ID_BY_NAME_CAR)) {
             stmt.setString(1, carName);
             ResultSet rs = stmt.executeQuery();
-            if (!rs.wasNull()) {
-                while (rs.next()) {
-                    int id = rs.getInt("id");
-                    return id;
-                }
+            if (!rs.wasNull() && rs.next()) {
+                System.out.println("result set is not empty");
+                id = rs.getInt("id");
             } else {
+                System.out.println("result set is empty");
                 createCar(carName);
-                int id = getCarIdByCarNameNewCar(carName);
-                return id;
+                id = getCarIdByCarName(carName);
+                System.out.println("getCarIdByCarName else return id = " + id);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
+        return id;
     }
 
     public void createCar(String name) {
@@ -140,12 +141,13 @@ public class MySqlUserDAO implements UserDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return;
     }
 
     public void createCarForUser(int userId, String carName) {
         try (Connection con = dbConnection.getConnection(); PreparedStatement stmt = con.prepareStatement(QUERY_CREATE_CAR_FOR_USER)) {
             int carId = getCarIdByCarName(carName);
+            System.out.println("car id = " + carId);
+            System.out.println("user id = " + userId);
             stmt.setInt(1, userId);
             stmt.setInt(2, carId);
             stmt.execute();
